@@ -1,5 +1,4 @@
 const toDoListApp = () => {
-  console.log("JS is running");
 
   const toDoList = [];
 
@@ -45,8 +44,8 @@ const toDoListApp = () => {
     table.innerHTML = '<tr>'
       + '<th>Delete</th>'
       + '<th>Description</th>'
-      + '<th width= "110">Priority <input id="PrioritySortButton" class="sortButton" value="Sort" type="button"/></th>'
-      + '<th width="110">Deadline <input id="DeadlineSortButton" class="sortButton" value="Sort" type="button"/></th>'
+      + '<th width= "110">Priority <input id="PrioritySortButton" class="sortButton" value="&#9660" type="button"/></th>'
+      + '<th width="110">Deadline <input id="DeadlineSortButton" class="sortButton" value="&#9660" type="button"/></th>'
       + '<th>Status</th>'
     	+ '</tr>';
 
@@ -54,6 +53,7 @@ const toDoListApp = () => {
     	table.innerHTML += getItemRow(item, i);
     });
 
+    sortButtonsClickHandler();
     deleteItemButtonClickHandler();
   };
 
@@ -82,18 +82,38 @@ const toDoListApp = () => {
     });
   };
 
+  let prioritySortButtonDirection = 'down';
+  let deadlineSortButtonDirection = 'down';
+
   const sortButtonsClickHandler = () => {
-    const table = document.getElementById('TableData');
+    const prioritySortButton = document.getElementById('PrioritySortButton');
+    const deadlineSortButton = document.getElementById('DeadlineSortButton');
 
-    table.addEventListener('click', function(e){
-      if (e.target && e.target.id==='PrioritySortButton'){
-        sortByPriority();
-      }else if(e.target && e.target.id==='DeadlineSortButton'){
-        sortByDeadline();
-      };
-
+    prioritySortButton.addEventListener('click', () => {
+      sortByPriority();
       renderTable();
+      console.log(prioritySortButtonDirection);
+      prioritySortButtonDirection = applySortButtonDirection(prioritySortButton, prioritySortButtonDirection);
     });
+
+    deadlineSortButton.addEventListener('click', () => {
+      sortByDeadline();
+      renderTable();
+      deadlineSortButtonDirection = applySortButtonDirection(deadlineSortButton, deadlineSortButtonDirection);
+    });
+  };
+
+  const applySortButtonDirection = (button, direction) => {
+    console.log("change button");
+    console.log(button);
+    if (direction === 'up'){
+      direction ='down';
+      button.value.innerHTML = "&#9660";
+    }else{
+      button.value.innerHTML = "&#9650";
+      direction = 'up';
+    }
+    return direction;
   };
 
   const sortByPriority = () => {
@@ -107,6 +127,9 @@ const toDoListApp = () => {
       return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
     });
   };
+
+
+
 
 
   addItemButtonClickHandler();
