@@ -14,6 +14,7 @@ const toDoListApp = () => {
     return document.getElementById('Deadline').value;
   };
 
+
   const addNewItem = (description, priority, deadline) => {
     toDoList.push({
       description,
@@ -23,9 +24,11 @@ const toDoListApp = () => {
     });
   };
 
+
   const deleteItem = (index) => {
     toDoList.splice(index, 1);
   }
+
 
   const getItemRow = (item, index) => {
     const row = '<tr>'
@@ -39,13 +42,14 @@ const toDoListApp = () => {
     return row;
   };
 
+
   const renderTable = () => {
  		const table = document.getElementById('TableData');
     table.innerHTML = '<tr>'
       + '<th>Delete</th>'
       + '<th>Description</th>'
-      + '<th width= "110">Priority <input id="PrioritySortButton" class="sortButton" value="&#9660" type="button"/></th>'
-      + '<th width="110">Deadline <input id="DeadlineSortButton" class="sortButton" value="&#9660" type="button"/></th>'
+      + '<th width= "110">Priority <input id="PrioritySortButton" class="sortButton" value="'+getButtonValue('PrioritySortButton')+'" type="button"/></th>'
+      + '<th width="110">Deadline <input id="DeadlineSortButton" class="sortButton" value="'+getButtonValue('DeadlineSortButton')+'" type="button"/></th>'
       + '<th>Status</th>'
     	+ '</tr>';
 
@@ -56,6 +60,7 @@ const toDoListApp = () => {
     sortButtonsClickHandler();
     deleteItemButtonClickHandler();
   };
+
 
   const addItemButtonClickHandler = () => {
   	const addItemButton = document.getElementById('AddItemButton');
@@ -68,6 +73,7 @@ const toDoListApp = () => {
       renderTable();
     });
   };
+
 
   const deleteItemButtonClickHandler = () => {
     const deleteItemButtons = document.getElementsByClassName('delete-item-button');
@@ -82,8 +88,6 @@ const toDoListApp = () => {
     });
   };
 
-  let prioritySortButtonDirection = 'down';
-  let deadlineSortButtonDirection = 'down';
 
   const sortButtonsClickHandler = () => {
     const prioritySortButton = document.getElementById('PrioritySortButton');
@@ -92,44 +96,67 @@ const toDoListApp = () => {
     prioritySortButton.addEventListener('click', () => {
       sortByPriority();
       renderTable();
-      console.log(prioritySortButtonDirection);
-      prioritySortButtonDirection = applySortButtonDirection(prioritySortButton, prioritySortButtonDirection);
     });
 
     deadlineSortButton.addEventListener('click', () => {
       sortByDeadline();
       renderTable();
-      deadlineSortButtonDirection = applySortButtonDirection(deadlineSortButton, deadlineSortButtonDirection);
     });
   };
 
-  const applySortButtonDirection = (button, direction) => {
-    console.log("change button");
-    console.log(button);
-    if (direction === 'up'){
-      direction ='down';
-      button.value.innerHTML = "&#9660";
-    }else{
-      button.value.innerHTML = "&#9650";
-      direction = 'up';
-    }
-    return direction;
-  };
 
   const sortByPriority = () => {
-    toDoList.sort(function (a, b) {
-      return a.priority - b.priority;
-    });
+    let buttonValue = getButtonValue("PrioritySortButton");
+    buttonValue = convertToUnicode(buttonValue);
+
+    if(buttonValue=='&#9660'){
+      toDoList.sort(function (a, b) {
+        return a.priority - b.priority;
+      });
+      changeButtonValue('PrioritySortButton', '&#9650');
+    }else{
+      toDoList.sort(function (a, b) {
+        return b.priority - a.priority;
+      });
+      changeButtonValue('PrioritySortButton', '&#9660');
+    }
   };
+
 
   const sortByDeadline = () => {
-    toDoList.sort(function (a, b) {
-      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
-    });
+    let buttonValue = getButtonValue("DeadlineSortButton");
+    buttonValue = convertToUnicode(buttonValue);
+
+    if(buttonValue=='&#9660'){
+      toDoList.sort(function (a, b) {
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      });
+      changeButtonValue('DeadlineSortButton', '&#9650');
+    }else{
+      toDoList.sort(function (a, b) {
+        return new Date(b.deadline).getTime() - new Date(a.deadline).getTime();
+      });
+      changeButtonValue("DeadlineSortButton",'&#9660');
+    }
   };
 
 
+  const getButtonValue = (buttonID) => {
+    const button = document.getElementById(buttonID);
+    return button.value;
+  };
 
+
+  const convertToUnicode = (char) => {
+    char = '&#'+char.charCodeAt(0);
+    return char;
+  };
+
+
+  const changeButtonValue = (buttonID, newValue) => {
+    const button = document.getElementById(buttonID);
+    button.value = newValue;
+  };
 
 
   addItemButtonClickHandler();
