@@ -30,13 +30,23 @@ const toDoListApp = () => {
   }
 
 
+  const changeStatus = (index) => {
+    const item = toDoList[index];
+    if (item.status === 'incomplete'){
+      item.status = 'complete';
+    }else{
+      item.status = 'incomplete';
+    }
+  };
+
+
   const getItemRow = (item, index) => {
     const row = '<tr>'
     + '<td><input class="delete-item-button" type="button" value="X" data-item="' + index + '"></td>'
     + '<td>' + item.description + '</td>'
     + '<td>' + item.priority + '</td>'
     + '<td>' + item.deadline + '</td>'
-    + '<td><input class="statusButton" type="button" value = "+"></td>'
+    + '<td><input class="change-status-button" type="button" value = "&#10004" data-item="' + index + '" ></td>'
     + '</tr>';
 
     return row;
@@ -55,10 +65,33 @@ const toDoListApp = () => {
 
     toDoList.forEach((item, i) => {
     	table.innerHTML += getItemRow(item, i);
+
+      const statusButton= table.rows[i+1].cells[4].firstChild;
+      statusButton.style.opacity = getStatusButtonOpacity(item);
+      statusButton.style.color = getStatusButtonColor(item);
     });
 
     sortButtonsClickHandler();
     deleteItemButtonClickHandler();
+    changeStatusButtonClickHandler();
+  };
+
+
+  const getStatusButtonOpacity = (item) => {
+    if (item.status==='complete'){
+      return 1;
+    }else{
+      return 0.5;
+    }
+  };
+
+
+  const getStatusButtonColor = (item) => {
+    if (item.status==='complete'){
+      return '#000';
+    }else{
+      return '#ccc0c0';
+    }
   };
 
 
@@ -84,6 +117,17 @@ const toDoListApp = () => {
 
       	deleteItem(index);
      	 	renderTable();
+      });
+    });
+  };
+
+  const changeStatusButtonClickHandler = () => {
+    const changeStatusButtons = document.getElementsByClassName('change-status-button');
+    Array.from(changeStatusButtons).forEach((button) => {
+      button.addEventListener('click', (e) => {
+        const index = e.target.getAttribute('data-item');
+        changeStatus(index);
+        renderTable();
       });
     });
   };

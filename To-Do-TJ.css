@@ -68,7 +68,7 @@ h2{
 	background-color:#8b878f;
 }
 
-.statusButton{
+.change-status-button{
   background-color: hsla(1,20%,70%,0);
 	border:1.3px solid #000;
   border-radius: 50%;
@@ -78,7 +78,7 @@ h2{
   opacity: 0.5;
 }
 
-.statusButton:hover{
+.change-status-button:hover{
   color: #000;
   background-color: hsla(1,20%,70%,0);
   opacity: 1;
