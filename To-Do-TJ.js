@@ -26,12 +26,22 @@ const toDoListApp = () => {
 
 
   const deleteItem = (index) => {
-    toDoList.splice(index, 1);
-  }
+    const currentDisplayedList = getListByCurrentTableType();
+    const length = toDoList.length;
+
+    for (var i = 0; i<length; i++){
+      if(currentDisplayedList[index]===toDoList[i]){
+        toDoList.splice(i, 1);
+        i=length;
+      }
+    }
+
+  };
 
 
   const changeStatus = (index) => {
-    const item = toDoList[index];
+    const currentDisplayedList = getListByCurrentTableType();
+    const item = currentDisplayedList[index];
     if (item.status === 'incomplete'){
       item.status = 'complete';
     }else{
@@ -54,6 +64,8 @@ const toDoListApp = () => {
 
 
   const renderTable = () => {
+    const listToRender = getListByCurrentTableType();
+
  		const table = document.getElementById('TableData');
     table.innerHTML = '<tr>'
       + '<th>Delete</th>'
@@ -63,7 +75,7 @@ const toDoListApp = () => {
       + '<th>Status</th>'
     	+ '</tr>';
 
-    toDoList.forEach((item, i) => {
+    listToRender.forEach((item, i) => {
     	table.innerHTML += getItemRow(item, i);
 
       const statusButton= table.rows[i+1].cells[4].firstChild;
@@ -77,22 +89,21 @@ const toDoListApp = () => {
   };
 
 
-  const getStatusButtonOpacity = (item) => {
-    if (item.status==='complete'){
-      return 1;
+  const getListByCurrentTableType = () => {
+    const tableTypeToggleButton = document.getElementById('TableTypeToggleButton');
+    const currentTableType = tableTypeToggleButton.value;
+
+    if (currentTableType === 'Completed'){
+      return getCompletedTasks();
+    }else if (currentTableType === 'Incomplete'){
+      return getIncompleteTasks();
     }else{
-      return 0.5;
+      return toDoList;
     }
   };
 
 
-  const getStatusButtonColor = (item) => {
-    if (item.status==='complete'){
-      return '#000';
-    }else{
-      return '#ccc0c0';
-    }
-  };
+
 
 
   const addItemButtonClickHandler = () => {
@@ -185,6 +196,46 @@ const toDoListApp = () => {
   };
 
 
+  const getCompletedTasks = () => {
+    const completedTasks = [];
+    toDoList.forEach((item) => {
+      if(item.status==='complete'){
+        completedTasks.push(item);
+      }
+    });
+    return completedTasks;
+  };
+
+
+  const getIncompleteTasks = () => {
+    const incompleteTasks = [];
+    toDoList.forEach((item) => {
+      if(item.status==='incomplete'){
+        incompleteTasks.push(item);
+      }
+    });
+    return incompleteTasks;
+  };
+
+
+  const getStatusButtonOpacity = (item) => {
+    if (item.status==='complete'){
+      return 1;
+    }else{
+      return 0.5;
+    }
+  };
+
+
+  const getStatusButtonColor = (item) => {
+    if (item.status==='complete'){
+      return '#000';
+    }else{
+      return '#ccc0c0';
+    }
+  };
+
+
   const getButtonValue = (buttonID) => {
     const button = document.getElementById(buttonID);
     return button.value;
@@ -203,8 +254,27 @@ const toDoListApp = () => {
   };
 
 
+  const toggleTableTypeClickHandler = () => {
+    const tableTypeToggleButton = document.getElementById('TableTypeToggleButton');
+
+    tableTypeToggleButton.addEventListener("click", () => {
+      const currentTableType = tableTypeToggleButton.value;
+
+      if (currentTableType === 'Incomplete'){
+        tableTypeToggleButton.value = 'Completed';
+      }else if(currentTableType === 'Completed'){
+        tableTypeToggleButton.value = 'All';
+      }else{
+        tableTypeToggleButton.value = 'Incomplete';
+      }
+      renderTable();
+    });
+  };
+
+
   addItemButtonClickHandler();
   sortButtonsClickHandler();
+  toggleTableTypeClickHandler();
 };
 
 toDoListApp();

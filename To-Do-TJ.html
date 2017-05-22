@@ -10,7 +10,7 @@
 
 <body>
 <div class="ToDos">
-  <h2>TO-DO List</h2>
+  <h1>TO-DO List</h1>
   <p> Enter a description of TO-DO item:</p>
   <input class="field" id="Description" type="text" name="desc" maxlength="30" size=30/>
 
@@ -39,23 +39,14 @@
     </tr>
   </table>
 
-  <div class="style" id="styleButtons">
-    <div class="toggleOff" id="Complete">
-      <input class="button" value="Completed" type="button"/>
-    </div>
 
-    <div class="toggleOff" id="Incomplete">
-      <input class="button" value="Incomplete" type="button"/>
-    </div>
+  <input id="TableTypeToggleButton" class="button" value="Incomplete" type="button"/>
 
-    <div class="toggleOn" id="AllTasks">
-      <input class="button" value="All" type="button"/>
-    </div>
-  </div>
+
 
 </div>
 
-<script id="listeners"> toDoListApp() </script>
+<script> toDoListApp() </script>
 </body>
 
 </html>
