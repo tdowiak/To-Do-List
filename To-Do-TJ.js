@@ -35,7 +35,7 @@ const toDoListApp = () => {
         i=length;
       }
     }
-
+    
   };
 
 
@@ -101,9 +101,6 @@ const toDoListApp = () => {
       return toDoList;
     }
   };
-
-
-
 
 
   const addItemButtonClickHandler = () => {
